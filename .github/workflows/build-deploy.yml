@@ -8,5 +8,11 @@ jobs:
     steps:
       - name: Pulling Git Repo
         uses: actions/checkout@v4
-      - name: Say Hi.
-        run: echo "Hello Tabish"
+      - name: Installing python 3.9
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.9'
+      - name: Upgrade pip
+        run: python -m pip install --upgrade pip
+      - name: Installing Dependencies.
+        run: pip install -r requirements.txt
