@@ -24,7 +24,7 @@ def get_all_posts(db: Session = Depends(get_db), current_user: int = Depends(oau
         models.Post.title.contains(search)).limit(limit).offset(skip).all()
     return posts
 
-@router.get("/{id}", response_model = schemas.PostOut)
+@router.get("/{id}", response_model = schemas.PostOut, status_code=status.HTTP_200_OK)
 def get_post_id(id: int, db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
     # cursor.execute("""SELECT * FROM posts WHERE id = (%s)""", (id,))
     # post = cursor.fetchone()
@@ -47,15 +47,15 @@ def create_post(post: schemas.PostCreate, db: Session = Depends(get_db), current
     #                (post.title, post.content, post.published))
     # new_post = cursor.fetchone()
     # conn.commit()
-    print(current_user)
+    # print(current_user)
     new_post = models.Post(owner_id=current_user.id, **post.model_dump())
     db.add(new_post)
     db.commit()
     db.refresh(new_post)
     return new_post
 
-@router.delete("/{id}")
-def delete_post(id: int, db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user), status_code = status.HTTP_204_NO_CONTENT):
+@router.delete("/{id}", status_code = status.HTTP_204_NO_CONTENT)
+def delete_post(id: int, db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
     # cursor.execute("""DELETE FROM posts WHERE id = (%s) RETURNING * """, (id,))
     # deleted_post = cursor.fetchone()
     # conn.commit()
@@ -67,14 +67,14 @@ def delete_post(id: int, db: Session = Depends(get_db), current_user: int = Depe
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Post with id: {id} not found")
     
     if post.owner_id != current_user.id:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail = "Unauthorized Access")
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail = "Unauthorized Access")
 
     post_query.delete(synchronize_session = False)
     db.commit()
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 
-@router.put("/{id}", response_model = schemas.Post)
-def update_post(id: int, post: schemas.PostCreate, db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user), statu_code = status.HTTP_201_CREATED):
+@router.put("/{id}", response_model = schemas.Post, status_code = status.HTTP_201_CREATED)
+def update_post(id: int, post: schemas.PostCreate, db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
     # cursor.execute("""UPDATE POSTS SET title = %s, content = %s, published = %s WHERE id = %s RETURNING *""", 
     #                (post.title, post.content, post.published, id))
     # updated_post = cursor.fetchone()
@@ -86,10 +86,9 @@ def update_post(id: int, post: schemas.PostCreate, db: Session = Depends(get_db)
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Post with id: {id} not found.")
     
     if updated_post.owner_id != current_user.id:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail = "Unauthorized Access")
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail = "Unauthorized Access")
 
     post_query.update(post.model_dump(), synchronize_session = False)
     db.commit()
 
     return post_query.first()
-

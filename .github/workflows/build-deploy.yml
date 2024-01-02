@@ -1,0 +1,12 @@
+name: Build and Deploy
+
+on: [push, pull_request]
+
+jobs:
+  job1:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Pulling Git Repo
+        uses: actions/checkout@v4
+      - name: Say Hi.
+        uses: echo "Hello Tabish"

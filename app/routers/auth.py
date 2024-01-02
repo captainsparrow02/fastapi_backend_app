@@ -8,7 +8,7 @@ router = APIRouter(
     tags=["Auhthentication"]
 )
 
-@router.post("/login", response_model=schemas.Token)
+@router.post("/login", response_model=schemas.Token, status_code=status.HTTP_200_OK)
 def login(user_credentials: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(database.get_db)):
     # The OAuth2PasswordRequestForm has inbuilt only 2 keys 'username' and 'password'
     # print(user_credentials.password)
