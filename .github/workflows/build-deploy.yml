@@ -56,8 +56,9 @@ jobs:
         with:
           host: ${{ secrets.PROD_HOST }}
           username: ${{ secrets.PROD_LOGIN_USERNAME }}
-          password: ${{ secrets.PROD_PASSWORD }}
+          password: ${{ secrets.PROD_LOGIN_PASSWORD }}
           script:
+            echo ${{ secrets.PROD_PASSWORD }} | sudo -S sleep 1 && sudo su - ${{ secrets.PROD_USERNAME }}
             cd app/src
             git pull
-            echo ${{ secrets.PROD_PASSWORD }} | sudo -S sleep 1 && sudo su - ${{ secrets.PROD_USERNAME }}
+            echo ${{ secrets.PROD_PASSWORD }} | sudo -S sleep 1 && systemctl restart api
