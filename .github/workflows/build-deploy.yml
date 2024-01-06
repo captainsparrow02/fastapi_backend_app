@@ -59,6 +59,6 @@ jobs:
           key: ${{ secrets.PROD_LOGIN_PASSWORD }}
           script:
             echo ${{ secrets.PROD_PASSWORD }} | sudo -S sleep 1 && sudo su - ${{ secrets.PROD_USERNAME }}
-            cd app/src
+            cd ~/app/src
             git pull
             echo ${{ secrets.PROD_PASSWORD }} | sudo -S sleep 1 && sudo systemctl restart api
