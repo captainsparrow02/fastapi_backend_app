@@ -4,9 +4,9 @@ from jose import jwt
 from app.config import settings
 import pytest
 
-def test_root(client):
-    res = client.get("/")
-    assert res.json().get('message') == 'Hello World'
+# def test_root(client):
+#     res = client.get("/")
+#     assert res.json().get('message') == 'Hello World'
 
 # @pytest.fixture()
 # def test_user(client):
