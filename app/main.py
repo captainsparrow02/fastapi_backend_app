@@ -25,6 +25,6 @@ app.include_router(vote.router)
 
 @app.get("/")
 async def root():
-    return {"message":"Hello World and Tabish Naved. It is working. now"}
+    return {"message":"Welcome to the FastAPI Social Media App."}
 
 
