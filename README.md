@@ -126,8 +126,8 @@ Welcome to the FastAPI Social Media Backend! This project is a backend applicati
 	-  **Request Payload:**  - Content-Type: `application/json`  
 		```json 
 		{ 
-		"post_id": <post_id>,
-		"dir": 1 or 0 
+		"post_id": "<post_id>",
+		"dir": "1 or 0" 
 		  } 
 		``` 
 		- `post_id` (integer): Id of the post.
